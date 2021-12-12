@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/room.css">
+    <link rel="stylesheet" href="katex.min.css">
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="katex.min.js"></script>
+    <script src="contrib/auto-render.min.js"></script>
+    <title>Room</title>
+</head>
+
+<body>
+    <div id="sidebar">
+        <div id="body_sidebar">
+            <header>Geometry Room</header>
+
+            <div class="sidebar_container">
+                Номер комнаты:
+                <button id="copyIdRoom">{{idRoom}}</button>
+                <div id="idRoom" style="display: none;">{{idRoom}}</div>
+                <div id="rootIdRoom" style="display: none;">{{rootIdRoom}}</div>
+            </div>
+
+            <div class="sidebar_container">
+                Пользователь: {{userName}}
+                <div id="userName" style="display: none;">{{userName}}</div>
+            </div>
+
+            <button id="request_permission" class="sidebar_buttons">Запросить права</button>
+            <button id="transmit_coordinates" class="sidebar_buttons">Передавать координаты</button>
+            <button id="transmit_cursor" class="sidebar_buttons">Передавать курсор</button>
+
+            <ul id="users_list">
+
+            </ul>
+
+            <button id="fullscreen" class="sidebar_buttons">На весь экран</button>
+
+        </div>
+        <button id="hidden_sidebar" class="hidden_buttons"></button>
+    </div>
+
+
+
+    <div id="applet_container"></div>
+
+    <div id="chat">
+        <button id="hidden_chat" class="hidden_buttons"></button>
+        <div id="body_chat">
+            <header>Чат</header>
+            <ul id="chat_container">
+
+            </ul>
+            <div id="input_chat">
+                <input id="input_chat_area">
+                <button id="input_chat_send">&#10148</button>
+            </div>
+        </div>
+    </div>
+    <div id="cursor"></div>
+
+    <script type="text/javascript">
+        var idRoom = document.getElementById('idRoom').innerHTML;
+        var rootIdRoom = document.getElementById('rootIdRoom').innerHTML;
+        var userName = document.getElementById('userName').innerHTML;
+
+        var sidebar = document.getElementById('sidebar');
+        var applet_container = document.getElementById('applet_container');
+        var chat = document.getElementById('chat');
+
+        var hidden_sidebar = document.getElementById('hidden_sidebar');
+        var hidden_chat = document.getElementById('hidden_chat');
+
+        var copyIdRoom = document.getElementById('copyIdRoom'); //!!!
+
+        var request_permission = document.getElementById('request_permission');
+
+        var users_list = document.getElementById('users_list');
+        var transmit_coordinates = document.getElementById('transmit_coordinates');
+        var transmit_cursor = document.getElementById('transmit_cursor');
+        var cursor = document.getElementById('cursor');
+
+        var chat_container = document.getElementById('chat_container');
+        var input_chat_area = document.getElementById('input_chat_area');
+        var input_chat_send = document.getElementById('input_chat_send');
+
+        var socket = io();
+
+        function copy(elem) {
+            var copyText = document.createElement('input');
+            copyText.setAttribute('value', elem.innerHTML);
+            document.body.appendChild(copyText);
+            copyText.select();
+            document.execCommand('copy');
+            document.body.removeChild(copyText);
+            copyText = elem.innerHTML;
+            elem.innerHTML = 'Скопировано';
+            setTimeout(function () {
+                elem.innerHTML = copyText;
+            }, 1000);
+        }
+        copyIdRoom.addEventListener('click', () => copy(copyIdRoom));
+    </script>
+    <script src="../scripts/room/init.js"></script>
+    <script src="../scripts/room/resize.js"></script>
+    <script src="../scripts/room/fullScreen.js"></script>
+    <script src="../scripts/room/ggbOnInit.js"></script>
+    <script src="../scripts/room/connect.js"></script>
+    <script src="../scripts/room/users_list.js"></script>
+    <script src="../scripts/room/permission.js"></script>
+    <script src="../scripts/room/xml.js"></script>
+    <script src="../scripts/room/messages.js"></script>
+    <script src="../scripts/room/latex.js"></script>
+    <script src="../scripts/room/cursor.js"></script>
+</body>
+
+</html>

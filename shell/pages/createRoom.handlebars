@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/createRoom.css">
+    <title>Create Room</title>
+</head>
+
+<body>
+    <div>
+        <div class="container">
+            Создана комната с номером:
+            <button id="buttonCopyIdRoom">{{idRoom}}</button>
+        </div>
+        <div class="container">
+            Код владельца:
+            <button id="buttonCopyRootIdRoom">{{rootIdRoom}}</button>
+        </div>
+        <form class="container" action="/room" method="POST">
+            Ваше имя:
+            <input name="userName" autocomplete="off">
+            <button name="idRoom" value="{{rootIdRoom}}">Продолжить</button>
+        </form>
+    </div>
+    <script>
+        var buttonCopyIdRoom = document.getElementById('buttonCopyIdRoom');
+        var buttonCopyRootIdRoom = document.getElementById('buttonCopyRootIdRoom');
+        function copy(elem) {
+            var copyText = document.createElement('input');
+            copyText.setAttribute('value', elem.innerHTML);
+            document.body.appendChild(copyText);
+            copyText.select();
+            document.execCommand('copy');
+            document.body.removeChild(copyText);
+            copyText = elem.innerHTML;
+            elem.innerHTML = 'Скопировано';
+            setTimeout(function () {
+                elem.innerHTML = copyText;
+            }, 1000);
+        }
+        buttonCopyIdRoom.addEventListener('click', () => copy(buttonCopyIdRoom));
+        buttonCopyRootIdRoom.addEventListener('click', () => copy(buttonCopyRootIdRoom));
+    </script>
+</body>
+
+</html>
