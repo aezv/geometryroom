@@ -13,9 +13,10 @@ function dbReadRoom(idRoom) {
     return dbJson;
 }
 
-function dbCreateRoom(idRoom, rootIdRoom) {
+function dbCreateRoom(idRoom, roomPermission, rootIdRoom) {
     var dbJson = {
         idRoom: idRoom,
+        roomPermission: roomPermission,
         rootIdRoom: rootIdRoom,
         roomXML: null,
         roomChat: new Array()
@@ -35,8 +36,14 @@ function dbGetRootIdRoom(idRoom) {
     return dbJson.rootIdRoom;
 }
 
+function dbGetRoomPermission(idRoom) {
+    var dbJson = dbReadRoom(idRoom);
+    return dbJson.roomPermission;
+}
+
 module.exports.dbWriteRoom = dbWriteRoom;
 module.exports.dbReadRoom = dbReadRoom;
 module.exports.dbCreateRoom = dbCreateRoom;
 module.exports.dbGetListRoom = dbGetListRoom;
 module.exports.dbGetRootIdRoom = dbGetRootIdRoom;
+module.exports.dbGetRoomPermission = dbGetRoomPermission;

@@ -1,7 +1,7 @@
 var permission = false;
 
 function loadPermission() {
-    if (rootIdRoom != '') {
+    if (rootIdRoom != '' && roomPermission == 'restricted') {
         socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: { userId: null, userName: userName }, request: true });
     }
 

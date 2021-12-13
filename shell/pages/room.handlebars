@@ -27,6 +27,11 @@
             </div>
 
             <div class="sidebar_container">
+                Тип прав: {{roomPermission}}
+                <div id="roomPermission" style="display: none;">{{roomPermission}}</div>
+            </div>
+
+            <div class="sidebar_container">
                 Пользователь: {{userName}}
                 <div id="userName" style="display: none;">{{userName}}</div>
             </div>
@@ -66,6 +71,7 @@
 
     <script type="text/javascript">
         var idRoom = document.getElementById('idRoom').innerHTML;
+        var roomPermission = document.getElementById('roomPermission').innerHTML;
         var rootIdRoom = document.getElementById('rootIdRoom').innerHTML;
         var userName = document.getElementById('userName').innerHTML;
 
