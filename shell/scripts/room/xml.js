@@ -1,5 +1,7 @@
 var coordinates_on = false;
 
+var saveGgbFile_timer = null;
+
 transmit_coordinates.addEventListener('click', function () {
     if (!coordinates_on) {
         transmit_coordinates.style.background = '#313438';
@@ -30,25 +32,20 @@ function parseXML() {
     };
 }
 
-/*var save_on = true;
-var save_timeout = true;
-var save_time = 100;
-function saveGgbFileTimeout() {
-    if (save_timeout && save_on){
-        setTimeout(saveGgbFile(), save_time);
-    }
-    else {
-
-    }
-}*/
-
 function saveGgbFile() {
-    socket.emit('xml', { idRoom: idRoom, data: parseXML() });
+    if(!saveGgbFile_timer){
+        saveGgbFile_timer = setTimeout(function(){
+            socket.emit('xml', { idRoom: idRoom, data: parseXML() });
+            clearTimeout(saveGgbFile_timer);
+            saveGgbFile_timer = null;
+        }, 100);
+    }
 }
 
 function loadXML(data) {
     var loadBodyXML;
-    if (data.body != parseXML().body) {
+    var data_parseXML = parseXML();
+    if (data.body != data_parseXML.body) {
         var xml = ggbApplet.getXML();
         var startSearch = '<construction title="" author="" date="">';
         var endSearch = '</construction>';
@@ -58,7 +55,7 @@ function loadXML(data) {
         var postfixXML = xml.substr(indexEndElement, xml.length);
         loadBodyXML = prefixXML + data.body + postfixXML;
     }
-    if (data.coord && data.coord != parseXML().coord) {
+    if (data.coord && data.coord != data_parseXML.coord) {
         var xml = loadBodyXML ? loadBodyXML : ggbApplet.getXML();
         var startCoordSearch = '<coordSystem';
         var endCoordSearch = '<evSettings';
