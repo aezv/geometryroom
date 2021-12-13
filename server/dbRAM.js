@@ -4,6 +4,7 @@ function writeRoom(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
     var room = {
         idRoom: rooms[index].idRoom,
+        roomPermission: rooms[index].roomPermission,
         rootIdRoom: rooms[index].rootIdRoom,
         roomXML: rooms[index].roomXML,
         roomChat: rooms[index].roomChat
@@ -14,6 +15,7 @@ function readRoom(idRoom, rooms) {
     var dbRoom = db.dbReadRoom(idRoom);
     var room = {
         idRoom: dbRoom.idRoom,
+        roomPermission: dbRoom.roomPermission,
         rootIdRoom: dbRoom.rootIdRoom,
         rootUser: {
             userId: null,
@@ -47,6 +49,10 @@ function getIndexRoom(idRoom, rooms) {
 function getUseRoom(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
     return rooms[index].rootUser.userId || rooms[index].defaultUsers.length;
+}
+function getRoomPermission(idRoom, rooms){
+    var index = getIndexRoom(idRoom, rooms);
+    return rooms[index].roomPermission;
 }
 function getRootIdRoom(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
@@ -134,6 +140,7 @@ module.exports.readRoom = readRoom;
 module.exports.delRoom = delRoom;
 module.exports.searchRoom = searchRoom;
 module.exports.getUseRoom = getUseRoom;
+module.exports.getRoomPermission = getRoomPermission;
 module.exports.getRootIdRoom = getRootIdRoom;
 module.exports.setRootUser = setRootUser;
 module.exports.getRootUser = getRootUser;

@@ -2,7 +2,7 @@ const dbRAM = require('../dbRAM.js');
 
 module.exports = function (io, socket, rooms) {
     socket.on('permission', function (msg) {
-        if (msg.rootIdRoom == dbRAM.getRootIdRoom(msg.idRoom, rooms)) {
+        if (msg.rootIdRoom == dbRAM.getRootIdRoom(msg.idRoom, rooms) && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
             if (!msg.user.userId) {
                 io.to(socket.id).emit('permission', true);
                 socket.to(msg.idRoom).emit('permission', false);
@@ -17,13 +17,25 @@ module.exports = function (io, socket, rooms) {
                 io.to(msg.user.userId).emit('permission', false);
             }
         }
-        else if (msg.request) {
+        else if (msg.request && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
             io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('request_permission', { userId: socket.id, userName: msg.user.userName });
         }
-        else {
+        else if (dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
             io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('permission', true);
             io.to(socket.id).emit('permission', false);
             dbRAM.setPermission(msg.idRoom, dbRAM.getRootUser(msg.idRoom, rooms).userId, rooms);
+        }
+        else if (msg.request && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'free') {
+            io.to(socket.id).emit('permission', true);
+            socket.to(msg.idRoom).emit('permission', false);
+            dbRAM.setPermission(msg.idRoom, socket.id, rooms);
+            console.log('1 if');
+        }
+        else if (dbRAM.getRoomPermission(msg.idRoom, rooms) == 'free') {
+            io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('permission', true);
+            io.to(socket.id).emit('permission', false);
+            dbRAM.setPermission(msg.idRoom, dbRAM.getRootUser(msg.idRoom, rooms).userId, rooms);
+            console.log('2 if');
         }
     });
 }

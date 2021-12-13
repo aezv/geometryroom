@@ -9,12 +9,22 @@ router.get('/', (req, res) => {
 });
 
 router.post('/createRoom', (req, res) => {
-    if (req.body.status == 'create') {
+    if(req.body.status == 'create_free'){
         var idArray = db.dbGetListRoom();
         var idRoom = randomId.getRandomId(idArray);
         var rootIdRoom = randomId.getRandomRootId(idRoom, idArray);
-        db.dbCreateRoom(idRoom, rootIdRoom);
-        res.render('createRoom', { idRoom: idRoom, rootIdRoom: rootIdRoom });
+        db.dbCreateRoom(idRoom, 'free', rootIdRoom);
+        res.render('createRoom', { idRoom: idRoom, roomPermission: 'free', rootIdRoom: rootIdRoom });
+    }
+    else if (req.body.status == 'create_restricted') {
+        var idArray = db.dbGetListRoom();
+        var idRoom = randomId.getRandomId(idArray);
+        var rootIdRoom = randomId.getRandomRootId(idRoom, idArray);
+        db.dbCreateRoom(idRoom, 'restricted', rootIdRoom);
+        res.render('createRoom', { idRoom: idRoom, roomPermission: 'restricted', rootIdRoom: rootIdRoom });
+    }
+    else if(req.body.status == 'choice'){
+        res.render('choiceCreateRoom');
     }
     else if (req.body.status == 'connect') {
         res.render('connectRoom');
@@ -26,14 +36,14 @@ router.post('/room', (req, res) => {
         var idRoom = req.body.idRoom.split(':')[0];
         var rootIdRoom = req.body.idRoom;
         if (rootIdRoom == db.dbGetRootIdRoom(idRoom)) {
-            res.render('room', { idRoom: idRoom, rootIdRoom: rootIdRoom, userName: req.body.userName });
+            res.render('room', { idRoom: idRoom, roomPermission: db.dbGetRoomPermission(idRoom), rootIdRoom: rootIdRoom, userName: req.body.userName });
         }
         else {
             res.send('Неверный код владельца');
         }
     }
     else if (db.dbGetListRoom().includes(req.body.idRoom)) {
-        res.render('room', { idRoom: req.body.idRoom, rootIdRoom: '', userName: req.body.userName });
+        res.render('room', { idRoom: req.body.idRoom, roomPermission: db.dbGetRoomPermission(req.body.idRoom), rootIdRoom: '', userName: req.body.userName });
     }
     else {
         res.send('Комната не найдена');
