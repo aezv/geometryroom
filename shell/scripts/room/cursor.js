@@ -1,4 +1,5 @@
 function loadCursor() {
+    var timer_cursor = null;
     var cursor_on = false;
     transmit_cursor.addEventListener('click', function () {
         if (!cursor_on) {
@@ -13,8 +14,14 @@ function loadCursor() {
         }
     });
     window.addEventListener('mousemove', function (event) {
-        if (permission && cursor_on)
-            socket.emit('cursor', { idRoom: idRoom, status: true, x: event.x, y: event.y });
+        if (permission && cursor_on && !timer_cursor){
+            timer_cursor = setTimeout(function(){
+                socket.emit('cursor', { idRoom: idRoom, status: true, x: event.x, y: event.y });
+                console.log(timer_cursor);
+                clearTimeout(timer_cursor);
+                timer_cursor = null;
+            }, 25);
+        }
     });
     socket.on('cursor', function (msg) {
         if (!permission && msg.status) {
