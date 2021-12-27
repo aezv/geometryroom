@@ -35,6 +35,7 @@ io.on('connection', (socket) => {
     require('./sockets/users_list.js')(io, socket, rooms);
     require('./sockets/xml.js')(socket, rooms);
     require('./sockets/messages.js')(io, socket, rooms);
+    require('./sockets/voice.js')(socket, rooms);
     require('./sockets/cursor.js')(socket, rooms);
 });
 

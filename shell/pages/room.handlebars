@@ -65,6 +65,9 @@
                 <input id="input_chat_area">
                 <button id="input_chat_send">&#10148</button>
             </div>
+            <div id="voice_chat">
+                <button id="microphone">Включить микрофон</button>
+            </div>
         </div>
     </div>
     <div id="cursor"></div>
@@ -95,6 +98,8 @@
         var input_chat_area = document.getElementById('input_chat_area');
         var input_chat_send = document.getElementById('input_chat_send');
 
+        var microphone = document.getElementById('microphone');
+
         var socket = io();
 
         function copy(elem) {
@@ -121,6 +126,7 @@
     <script src="../scripts/room/permission.js"></script>
     <script src="../scripts/room/xml.js"></script>
     <script src="../scripts/room/messages.js"></script>
+    <script src="../scripts/room/voice.js"></script>
     <script src="../scripts/room/latex.js"></script>
     <script src="../scripts/room/cursor.js"></script>
 </body>
