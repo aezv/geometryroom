@@ -144,7 +144,7 @@ body {
     margin: 0 2vh;
     padding: 0;
     width: 85%;
-    height: 80%;
+    height: 75%;
     overflow-y: scroll;
     background: #41464b;
 }
@@ -196,6 +196,27 @@ body {
     background: #41464b;
 }
 .hidden_buttons:hover{
+    background: #313438;
+    box-shadow: 0 0 10px 5px #000000;
+}
+
+#voice_chat{
+    margin: 2vh 0;
+    width: 100%;
+    height: 5%;
+}
+#microphone{
+    width: 50%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: #E2E2E2;
+    border: none;
+    border-radius: 5px;
+    background: #41464b;
+}
+#microphone:hover{
     background: #313438;
     box-shadow: 0 0 10px 5px #000000;
 }
