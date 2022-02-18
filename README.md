@@ -1,6 +1,9 @@
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 # Geometry Room
 ## Описание
 Веб-версия [GeoGebra](https://www.geogebra.org/) для многопользовательской работы.
+
+
 ## Требования для запуска
 1. [Git](https://git-scm.com/) версии 2.31.0 или более поздней.
 2. [Node.js](https://nodejs.org/) версии 16.2.0 или более поздней.
