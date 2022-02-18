@@ -2,7 +2,13 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 
 const dbPath = process.cwd() + '/database';
+const dbPathStats = process.cwd() + '/database/stats';
+const dbPathErrors = process.cwd() + '/database/errors';
+const dbPathBugReport = process.cwd() + '/database/bugreport';
 mkdirp.sync(dbPath);
+mkdirp.sync(dbPathStats);
+mkdirp.sync(dbPathErrors);
+mkdirp.sync(dbPathBugReport);
 
 function dbWriteStatistics(dbJson) {
     fs.writeFileSync(dbPath + '/statistics.json', JSON.stringify(dbJson));
