@@ -1,4 +1,5 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![GitHub repo size](https://img.shields.io/github/repo-size/aezv/geometryroom?color=brightgreen)](https://github.com/aezv/geometryroom/archive/refs/heads/main.zip)
 # Geometry Room
 ## Описание
 Веб-версия [GeoGebra](https://www.geogebra.org/) для многопользовательской работы.
