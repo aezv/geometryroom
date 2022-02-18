@@ -10,7 +10,7 @@ const cfg = require('../config.json');
 const db = require('./database.js');
 
 var rooms = new Array();
-if(fs.existsSync('./database/statistics.json'))
+if(fs.existsSync('./database/stats/statistics.json'))
     global.stats = db.dbReadStatistics();
 else {
     global.stats = {

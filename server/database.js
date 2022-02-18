@@ -11,11 +11,11 @@ mkdirp.sync(dbPathErrors);
 mkdirp.sync(dbPathBugReport);
 
 function dbWriteStatistics(dbJson) {
-    fs.writeFileSync(dbPath + '/statistics.json', JSON.stringify(dbJson));
+    fs.writeFileSync(dbPathStats + '/statistics.json', JSON.stringify(dbJson));
 }
 
 function dbReadStatistics() {
-    var dbJson = JSON.parse(fs.readFileSync(dbPath + '/statistics.json'));
+    var dbJson = JSON.parse(fs.readFileSync(dbPathStats + '/statistics.json'));
     return dbJson;
 }
 
