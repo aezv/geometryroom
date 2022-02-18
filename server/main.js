@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs')
 var exphbs = require('express-handlebars');
 
+const cfg = require('../config.json');
+
 const db = require('./database.js');
 
 var rooms = new Array();
@@ -28,7 +30,7 @@ const router = require('./router.js');
 const server = http.createServer(app);
 const io = new Server(server);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || cfg.default_port;
 
 app.use(express.static('shell'));
 //katex
