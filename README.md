@@ -7,7 +7,7 @@
 ## Запуск
 Склонируйте репозиторий командой:
 
-    git clone https://github.com/aezv/gebrasync.git
+    git clone https://github.com/aezv/geometryroom.git
 
 Перейдите в корневой каталог репозитория.
 
