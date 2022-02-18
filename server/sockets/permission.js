@@ -30,13 +30,11 @@ module.exports = function (io, socket, rooms) {
                 io.to(socket.id).emit('permission', true);
                 socket.to(msg.idRoom).emit('permission', false);
                 dbRAM.setPermission(msg.idRoom, socket.id, rooms);
-                console.log('1 if');
             }
             else if (dbRAM.getRoomPermission(msg.idRoom, rooms) == 'free') {
                 io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('permission', true);
                 io.to(socket.id).emit('permission', false);
                 dbRAM.setPermission(msg.idRoom, dbRAM.getRootUser(msg.idRoom, rooms).userId, rooms);
-                console.log('2 if');
             }
         }
         catch (e) {

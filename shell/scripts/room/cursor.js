@@ -17,7 +17,6 @@ function loadCursor() {
         if (permission && cursor_on && !timer_cursor){
             timer_cursor = setTimeout(function(){
                 socket.emit('cursor', { idRoom: idRoom, status: true, x: event.x, y: event.y });
-                console.log(timer_cursor);
                 clearTimeout(timer_cursor);
                 timer_cursor = null;
             }, 25);
