@@ -1,7 +1,8 @@
 const dbRAM = require('../dbRAM.js');
 
-module.exports = function (io, socket, rooms) {
+module.exports = function (io, socket, rooms, stats) {
     socket.on('connect_room', function (msg) {
+        stats.users++;
         socket.join(msg.idRoom);
         if (!dbRAM.searchRoom(msg.idRoom, rooms))
             dbRAM.readRoom(msg.idRoom, rooms);

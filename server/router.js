@@ -1,11 +1,31 @@
 const express = require('express');
 const router = express.Router();
 
+const cfg = require('../config.json');
+
 const db = require('./database.js');
 const randomId = require('./randomID.js');
 
 router.get('/', (req, res) => {
     res.render('index');
+});
+
+router.get('/admin', (req, res)=>{
+    res.render('admin');
+});
+
+router.post('/admin_panel', (req, res) => {
+    if(req.body.admin_password == cfg.admin_password){
+        res.render('adminPanel', {
+            users: stats.users,
+            rooms: stats.rooms,
+            max_users: stats.max_users,
+            max_rooms: stats.max_users
+        });
+    }
+    else {
+        res.render('index');
+    }
 });
 
 router.post('/createRoom', (req, res) => {
@@ -14,6 +34,7 @@ router.post('/createRoom', (req, res) => {
         var idRoom = randomId.getRandomId(idArray);
         var rootIdRoom = randomId.getRandomRootId(idRoom, idArray);
         db.dbCreateRoom(idRoom, 'free', rootIdRoom);
+        stats.rooms++;
         res.render('createRoom', { idRoom: idRoom, roomPermission: 'free', rootIdRoom: rootIdRoom });
     }
     else if (req.body.status == 'create_restricted') {
@@ -21,6 +42,7 @@ router.post('/createRoom', (req, res) => {
         var idRoom = randomId.getRandomId(idArray);
         var rootIdRoom = randomId.getRandomRootId(idRoom, idArray);
         db.dbCreateRoom(idRoom, 'restricted', rootIdRoom);
+        stats.rooms++;
         res.render('createRoom', { idRoom: idRoom, roomPermission: 'restricted', rootIdRoom: rootIdRoom });
     }
     else if(req.body.status == 'choice'){

@@ -10,14 +10,21 @@
 </head>
 
 <body>
-    <div>
-        <h1>Geometry Room</h1>
-        <form action="/createRoom" method="POST">
-            <button class="btn" name="status" value="choice">Создать комнату</button>
+    <div id="admin">
+        <form action="/admin" method="GET">
+            <button id="admin_btn">Панель администратора</button>
         </form>
-        <form action="/createRoom" method="POST">
-            <button class="btn" name="status" value="connect">Присоединиться</button>
-        </form>
+    </div>
+    <div id="main">
+        <div id="main_content">
+            <h1>Geometry Room</h1>
+            <form action="/createRoom" method="POST">
+                <button class="btn" name="status" value="choice">Создать комнату</button>
+            </form>
+            <form action="/createRoom" method="POST">
+                <button class="btn" name="status" value="connect">Присоединиться</button>
+            </form>
+        </div>
     </div>
 </body>
 
