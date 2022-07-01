@@ -7,7 +7,7 @@ module.exports = function (io, socket, rooms) {
             io.to(msg.idRoom).emit('message', msg.userName + ': ' + msg.body);
         }
         catch (e) {
-            //console.log(e);
+            console.log(e);
         }
     });
 };
