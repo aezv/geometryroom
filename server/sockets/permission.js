@@ -1,44 +1,58 @@
 const dbRAM = require('../dbRAM.js');
 
+function localSetPermissionFree(io, socket, rooms, idRoom) {
+    socket.to(idRoom).emit('permission', false);
+    io.to(socket.id).emit('permission', true);
+    dbRAM.setPermissionUserId(idRoom, rooms, socket.id);
+}
+function localDelPermissionFree(io, socket, rooms, idRoom) {
+    io.to(idRoom).emit('permission', false);
+    dbRAM.setPermissionUserId(idRoom, rooms, null);
+}
+
+function localSetPermissionRestricted(io, socket, rooms, idRoom, userId) {
+    io.to(dbRAM.getPermissionUserId(idRoom, rooms)).emit('permission', false);
+    io.to(userId).emit('permission', true);
+    dbRAM.setPermissionUserId(idRoom, rooms, userId);
+}
+function localDelPermissionRestricted(io, socket, rooms, idRoom) {
+    io.to(idRoom).emit('permission', false);
+    io.to(dbRAM.getRootUser(idRoom, rooms)).emit('permission', true);
+    dbRAM.setPermissionUserId(idRoom, rooms, dbRAM.getRootUser(idRoom, rooms));
+}
+
+
 module.exports = function (io, socket, rooms) {
     socket.on('permission', function (msg) {
         try {
-            if (msg.rootIdRoom == dbRAM.getRootIdRoom(msg.idRoom, rooms) && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
-                if (!msg.user.userId) {
-                    io.to(socket.id).emit('permission', true);
-                    socket.to(msg.idRoom).emit('permission', false);
-                    dbRAM.setPermission(msg.idRoom, socket.id, rooms);
+            let typePermission = dbRAM.getRoomPermission(msg.idRoom, rooms);
+
+            if (typePermission == 'free') {
+                if (msg.request)
+                    localSetPermissionFree(io, socket, rooms, msg.idRoom);
+                else {
+                    localDelPermissionFree(io, socket, rooms, msg.idRoom);
                 }
-                else if (msg.request) {
-                    io.to(socket.id).emit('permission', false);
-                    io.to(msg.user.userId).emit('permission', true);
-                    dbRAM.setPermission(msg.idRoom, msg.user.userId, rooms);
+            }
+            else if (typePermission == 'restricted') {
+                if (msg.rootIdRoom == dbRAM.getRootIdRoom(msg.idRoom, rooms)) {
+                    if (msg.request && msg.userId)
+                        localSetPermissionRestricted(io, socket, rooms, msg.idRoom, msg.userId);
+                    else
+                        localDelPermissionRestricted(io, socket, rooms, msg.idRoom);
                 }
                 else {
-                    io.to(msg.user.userId).emit('permission', false);
+                    if (msg.request)
+                        io.to(dbRAM.getRootUser(msg.idRoom, rooms)).emit('request_permission', socket.id);
+                    else
+                        localDelPermissionRestricted(io, socket, rooms, msg.idRoom);
                 }
             }
-            else if (msg.request && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
-                io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('request_permission', { userId: socket.id, userName: msg.user.userName });
-            }
-            else if (dbRAM.getRoomPermission(msg.idRoom, rooms) == 'restricted') {
-                io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('permission', true);
-                io.to(socket.id).emit('permission', false);
-                dbRAM.setPermission(msg.idRoom, dbRAM.getRootUser(msg.idRoom, rooms).userId, rooms);
-            }
-            else if (msg.request && dbRAM.getRoomPermission(msg.idRoom, rooms) == 'free') {
-                io.to(socket.id).emit('permission', true);
-                socket.to(msg.idRoom).emit('permission', false);
-                dbRAM.setPermission(msg.idRoom, socket.id, rooms);
-            }
-            else if (dbRAM.getRoomPermission(msg.idRoom, rooms) == 'free') {
-                io.to(dbRAM.getRootUser(msg.idRoom, rooms).userId).emit('permission', true);
-                io.to(socket.id).emit('permission', false);
-                dbRAM.setPermission(msg.idRoom, dbRAM.getRootUser(msg.idRoom, rooms).userId, rooms);
-            }
+            else
+                throw 'Room: ' + msg.idRoom + ', Error: Unknown room permissions';
         }
         catch (e) {
-            //console.log(e);
+            console.log(e);
         }
     });
 }
