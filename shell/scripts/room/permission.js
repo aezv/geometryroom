@@ -1,19 +1,9 @@
 var permission = false;
 
 function loadPermission() {
-    if (rootIdRoom != '' && roomPermission == 'restricted') {
-        socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: { userId: null, userName: userName }, request: true });
+    if (rootIdRoom != '') {
+        socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, userId: null, request: false });
     }
-
-    request_permission.addEventListener('click', function () {
-        if (!permission) {
-            request_permission.innerHTML = 'Права запрошены';
-            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: { userId: null, userName: userName }, request: true });
-        }
-        else {
-            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: { userId: null, userName: userName }, request: false });
-        }
-    });
 
     socket.on('permission', function (msg) {
         if (msg) {
@@ -43,24 +33,35 @@ function loadPermission() {
         }
     });
 
-    socket.on('request_permission', function (msg) {
+    request_permission.addEventListener('click', function () {
+        if (!permission) {
+            request_permission.innerHTML = 'Права запрошены';
+            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, userId: null, request: true });
+        }
+        else {
+            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, userId: null, request: false });
+        }
+    });
+
+    socket.on('request_permission', function (msg) { //сделать аккуратнее
         var index;
         for (var i = 0; i < current_users_list.length; i++) {
-            if (msg.id == current_users_list[i].id && msg.userName == current_users_list[i].userName) {
+            if (msg == current_users_list[i].userId) {
                 index = i;
                 break;
             }
         }
+
         var li = document.getElementById('li_id' + index);
-        li.innerHTML = msg.userName +
+        li.innerHTML = current_users_list[index].userName +
             '<button id="permission_true">+</button><button id="permission_false">-</button>';
         document.getElementById('permission_true').addEventListener('click', function () {
-            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: msg, request: true });
-            li.innerHTML = msg.userName;
+            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, userId: msg, request: true });
+            li.innerHTML = current_users_list[index].userName;
         });
         document.getElementById('permission_false').addEventListener('click', function () {
-            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, user: msg, request: false });
-            li.innerHTML = msg.userName;
+            socket.emit('permission', { idRoom: idRoom, rootIdRoom: rootIdRoom, userId: msg, request: false });
+            li.innerHTML = current_users_list[index].userName;
         });
         var tick_hidden_sidebar = 0;
         var max_tick_hidden_sidebar = 7; //только нечетные
