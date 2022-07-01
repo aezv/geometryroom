@@ -33,6 +33,9 @@ function dbCreateRoom(idRoom, roomPermission, rootIdRoom) {
         idRoom: idRoom,
         roomPermission: roomPermission,
         rootIdRoom: rootIdRoom,
+        rootUser: null,
+        permissionUserId: null,
+        users: new Array(),
         roomXML: null,
         roomChat: new Array()
     };
