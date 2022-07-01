@@ -17,12 +17,9 @@ function readRoom(idRoom, rooms) {
         idRoom: dbRoom.idRoom,
         roomPermission: dbRoom.roomPermission,
         rootIdRoom: dbRoom.rootIdRoom,
-        rootUser: {
-            userId: null,
-            userName: null
-        },
-        permission: null,
-        defaultUsers: new Array(),
+        rootUser: dbRoom.rootUser,
+        permissionUserId: dbRoom.permissionUserId,
+        users: dbRoom.users,
         roomXML: dbRoom.roomXML,
         roomChat: dbRoom.roomChat
     };
@@ -48,7 +45,7 @@ function getIndexRoom(idRoom, rooms) {
 }
 function getUseRoom(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
-    return rooms[index].rootUser.userId || rooms[index].defaultUsers.length;
+    return rooms[index].users.length;
 }
 function getRoomPermission(idRoom, rooms){
     var index = getIndexRoom(idRoom, rooms);
@@ -58,45 +55,41 @@ function getRootIdRoom(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
     return rooms[index].rootIdRoom;
 }
-function setRootUser(idRoom, rootUser, rooms) {
-    var index = getIndexRoom(idRoom, rooms);
-    rooms[index].rootUser = rootUser;
-}
-function getRootUser(idRoom, rooms) {
+function getRootUser(idRoom, rooms){
     var index = getIndexRoom(idRoom, rooms);
     return rooms[index].rootUser;
 }
-function setPermission(idRoom, permission, rooms) {
+function setRootUser(idRoom, rooms, userId){
     var index = getIndexRoom(idRoom, rooms);
-    rooms[index].permission = permission;
+    rooms[index].rootUser = userId;
 }
-function getPermission(idRoom, rooms) {
+function getPermissionUserId(idRoom, rooms){
     var index = getIndexRoom(idRoom, rooms);
-    return rooms[index].permission;
+    return rooms[index].permissionUserId;
 }
-function addDefaultUser(idRoom, user, rooms) {
+function setPermissionUserId(idRoom, rooms, userId){
     var index = getIndexRoom(idRoom, rooms);
-    rooms[index].defaultUsers.push(user);
+    rooms[index].permissionUserId = userId;
 }
-function delDefaultUser(idRoom, userId, rooms) {
+function addUser(idRoom, user, rooms) {
     var index = getIndexRoom(idRoom, rooms);
-    for (var i = 0; i < rooms[index].defaultUsers.length; i++) {
-        if (userId == rooms[index].defaultUsers[i].userId) {
-            rooms[index].defaultUsers.splice(i, 1);
+    rooms[index].users.push(user);
+}
+function delUser(idRoom, userId, rooms) {
+    var index = getIndexRoom(idRoom, rooms);
+    for (var i = 0; i < rooms[index].users.length; i++) {
+        if (userId == rooms[index].users[i].userId) {
+            rooms[index].users.splice(i, 1);
             break;
         }
     }
 }
-function getAllUsers(idRoom, rooms) {
+function getUsers(idRoom, rooms) {
     var index = getIndexRoom(idRoom, rooms);
-    var users = new Array();
-    users.push(rooms[index].rootUser);
-    for (var i = 0; i < rooms[index].defaultUsers.length; i++)
-        users.push(rooms[index].defaultUsers[i]);
-    return users;
+    return rooms[index].users;
 }
 function getUserNameByUserId(idRoom, userId, rooms) {
-    var users = getAllUsers(idRoom, rooms);
+    var users = getUsers(idRoom, rooms);
     for (var i = 0; i < users.length; i++) {
         if (userId == users[i].userId)
             return users[i].userName;
@@ -125,10 +118,8 @@ function getChat(idRoom, rooms) {
 }
 function getIdRoomByUserId(userId, rooms) {
     for (var i = 0; i < rooms.length; i++) {
-        if (userId == rooms[i].rootUser.userId)
-            return rooms[i].idRoom;
-        for (var j = 0; j < rooms[i].defaultUsers.length; j++) {
-            if (userId == rooms[i].defaultUsers[j].userId)
+        for (var j = 0; j < rooms[i].users.length; j++) {
+            if (userId == rooms[i].users[j].userId)
                 return rooms[i].idRoom;
         }
     }
@@ -142,13 +133,13 @@ module.exports.searchRoom = searchRoom;
 module.exports.getUseRoom = getUseRoom;
 module.exports.getRoomPermission = getRoomPermission;
 module.exports.getRootIdRoom = getRootIdRoom;
-module.exports.setRootUser = setRootUser;
 module.exports.getRootUser = getRootUser;
-module.exports.setPermission = setPermission;
-module.exports.getPermission = getPermission;
-module.exports.addDefaultUser = addDefaultUser;
-module.exports.delDefaultUser = delDefaultUser;
-module.exports.getAllUsers = getAllUsers;
+module.exports.setRootUser = setRootUser;
+module.exports.getPermissionUserId = getPermissionUserId;
+module.exports.setPermissionUserId = setPermissionUserId;
+module.exports.addUser = addUser;
+module.exports.delUser = delUser;
+module.exports.getUsers = getUsers;
 module.exports.getUserNameByUserId = getUserNameByUserId;
 module.exports.setXML = setXML;
 module.exports.getXML = getXML;
