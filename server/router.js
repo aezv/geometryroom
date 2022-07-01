@@ -30,12 +30,10 @@ router.post('/admin_panel', (req, res) => {
 
 router.post('/createRoom', (req, res) => {
     if(req.body.status == 'create_free'){
-        var idArray = db.dbGetListRoom();
-        var idRoom = randomId.getRandomId(idArray);
-        var rootIdRoom = randomId.getRandomRootId(idRoom, idArray);
-        db.dbCreateRoom(idRoom, 'free', rootIdRoom);
+        var idRoom = randomId.getRandomId(db.dbGetListRoom());
+        db.dbCreateRoom(idRoom, 'free', null);
         stats.rooms++;
-        res.render('createRoom', { idRoom: idRoom, roomPermission: 'free', rootIdRoom: rootIdRoom });
+        res.render('createRoom', { idRoom: idRoom, roomPermission: 'free', rootIdRoom: idRoom });
     }
     else if (req.body.status == 'create_restricted') {
         var idArray = db.dbGetListRoom();
